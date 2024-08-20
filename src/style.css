@@ -57,12 +57,14 @@ body {
 
 /* ---------------- Your CSS --------------------*/
 
-.container {
+.layout-container {
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 4fr;
-  grid-template-rows: 1fr 4fr;
+  grid-template-rows: 80px 1fr;
 }
+
+/*---------- Header ----------*/
 
 header {
   text-align: center;
@@ -72,35 +74,90 @@ header {
 
 /*---------- Sidebar ----------*/
 
-.sidebar {
+/* .sidebar {
+ 
+} */
+
+.sidebar .project {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
   background-color: var(--color-panel);
   border-right: 2px solid var(--color-panel-border);
 }
 
-.project-container {
+.sidebar .project .title {
   font-size: 32px;
   font-weight: bold;
   border-bottom: 2px solid var(--color-white);
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
+  width: 100%;
+  align-self: flex-start;
+  padding-bottom: 6px;
 }
 
-.project-dialog {
+.sidebar .project .container {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
 }
 
-.project-dialog:hover {
+.sidebar .project .dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.sidebar .project .dialog .button-container {
+  display: flex;
+  gap: 8px;
+}
+
+.sidebar .project .dialog .button-container button {
+  color: var(--color-white);
+  font-weight: bold;
+  flex: 1;
+  border: none;
+  border-radius: 3px;
+}
+
+.sidebar .project .dialog .button-container .add {
+  background-color: #1f8d4d;
+}
+
+.sidebar .project .dialog .button-container .cancel {
+  background-color: #be0404;
+}
+
+.sidebar .project .container .project-panel {
+  display: flex;
+  border-radius: 3px;
+  padding: 6px;
+}
+
+.sidebar .project .container .project-panel:hover {
   background-color: var(--color-bg);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
-.project-dialog button {
-  margin-right: 0.5rem;
+.sidebar .project .container .project-panel .project-title {
+  flex: 1;
+  text-align: center;
+  align-self: center;
+}
+
+/*---------- Main ----------*/
+
+main {
+  padding: 32px;
+}
+
+main .title {
+  background-color: var(--color-panel);
+  border-radius: 3px;
+  padding: 20px;
 }

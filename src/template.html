@@ -6,14 +6,22 @@
     <title>Odin ToDo List</title>
   </head>
   <body>
-    <div class="container">
+    <div class="layout-container">
       <header>Header</header>
       <div class="sidebar">
-        <div class="project-container">Projects</div>
-        <div class="create-project-dialog"></div>
-        <button id="create-project">Create Project</button>
-        <button id="create-todo">Create ToDo</button>
+        <div class="project">
+          <div class="title">Projects</div>
+          <div class="container"></div>
+          <div class="dialog"></div>
+          <button class="create-project">Create Project</button>
+        </div>
       </div>
+      <main>
+        <div class="title"></div>
+        <div class="container"></div>
+        <div class="dialog"></div>
+        <div class="create-todo"></div>
+      </main>
     </div>
   </body>
 </html>
