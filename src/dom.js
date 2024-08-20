@@ -1,16 +1,6 @@
 import "./style.css";
 import { createToDo, createProject } from "./app";
 
-// DOM Stuff
-// Sidebar
-
-// Register EventListeners
-// Register create project button
-const createProjectButton = document.querySelector(
-  ".sidebar .project .create-project"
-);
-createProjectButton.addEventListener("click", createProjectDialog);
-
 //------------ Display Logic ------------------------
 
 function createProjectDialog() {
@@ -47,10 +37,63 @@ function createProjectDialog() {
   input.focus();
 }
 
-function createToDoDialog() {
-  const div = document.createElement("div");
-  div.textContent = "ToDo Dialog";
-  return div;
+function createToDoDialog(project) {
+  const dialog = document.querySelector("main .dialog");
+
+  const title = document.createElement("input");
+  title.setAttribute("type", "text");
+  title.setAttribute("placeholder", "Enter title");
+
+  const description = document.createElement("textarea");
+  description.setAttribute("type", "text");
+  description.setAttribute("placeholder", "Enter description");
+
+  const dueDate = document.createElement("input");
+  dueDate.setAttribute("type", "text");
+  dueDate.setAttribute("placeholder", "Enter dueDate");
+
+  const priority = document.createElement("input");
+  priority.setAttribute("type", "text");
+  priority.setAttribute("placeholder", "Enter priority");
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("button-container");
+
+  const add = document.createElement("button");
+  add.textContent = "Add";
+  add.classList.add("add");
+  add.addEventListener("click", () =>
+    handleAddToDoClickEvent(
+      title.value,
+      description.value,
+      dueDate.value,
+      priority.value,
+      dialog,
+      project
+    )
+  );
+
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  cancel.classList.add("cancel");
+  cancel.addEventListener("click", () => {
+    dialog.removeChild(title);
+    dialog.removeChild(description);
+    dialog.removeChild(dueDate);
+    dialog.removeChild(priority);
+    dialog.removeChild(buttonContainer);
+  });
+
+  buttonContainer.appendChild(add);
+  buttonContainer.appendChild(cancel);
+
+  dialog.appendChild(title);
+  dialog.appendChild(description);
+  dialog.appendChild(dueDate);
+  dialog.appendChild(priority);
+  dialog.appendChild(buttonContainer);
+
+  title.focus();
 }
 
 function createProjectEntry(project) {
@@ -66,7 +109,7 @@ function createProjectEntry(project) {
   projectTitle.textContent = project.title;
   projectTitle.classList.add("project-title");
   projectTitle.addEventListener("click", () => {
-    populateMainContent(project.title, project.todos);
+    populateMainContent(project);
   });
 
   // Create button
@@ -81,21 +124,88 @@ function createProjectEntry(project) {
   container.appendChild(wrapper);
 }
 
-function populateMainContent(title, todos) {
+function populateMainContent(project) {
   // Get DOM Elements
   const mainTitle = document.querySelector("main .title");
   const todoContainer = document.querySelector("main .container");
-  const dialog = document.querySelector("main .dialog");
   const createToDo = document.querySelector("main .create-todo");
 
-  mainTitle.textContent = title;
+  mainTitle.textContent = project.title;
 
   // Delete existing todos
   todoContainer.replaceChildren();
 
-  todos.forEach((todo) => {
+  project.todos.forEach((todo) => {
     const div = document.createElement("div");
-    div.textContent = `${todo.title} ${todo.description} ${todo.dueDate} ${todo.priority}`;
+    div.classList.add("todo-panel");
+
+    //---
+
+    const titleWrapper = document.createElement("div");
+
+    const titleText = document.createElement("div");
+    titleText.textContent = "Title:";
+    titleText.style.fontWeight = "bold";
+    titleText.style.fontSize = "18px";
+
+    const titleValue = document.createElement("div");
+    titleValue.textContent = todo.title;
+
+    titleWrapper.appendChild(titleText);
+    titleWrapper.appendChild(titleValue);
+
+    //---
+
+    const descriptionWrapper = document.createElement("div");
+
+    const descriptionText = document.createElement("div");
+    descriptionText.textContent = "Description:";
+    descriptionText.style.fontWeight = "bold";
+    descriptionText.style.fontSize = "18px";
+
+    const descriptionValue = document.createElement("div");
+    descriptionValue.textContent = todo.description;
+
+    descriptionWrapper.appendChild(descriptionText);
+    descriptionWrapper.appendChild(descriptionValue);
+
+    //---
+
+    const dueDateWrapper = document.createElement("div");
+
+    const dueDateText = document.createElement("div");
+    dueDateText.textContent = "DueDate:";
+    dueDateText.style.fontWeight = "bold";
+    dueDateText.style.fontSize = "18px";
+
+    const dueDateValue = document.createElement("div");
+    dueDateValue.textContent = todo.dueDate;
+
+    dueDateWrapper.appendChild(dueDateText);
+    dueDateWrapper.appendChild(dueDateValue);
+
+    //---
+
+    const priorityWrapper = document.createElement("div");
+
+    const priorityText = document.createElement("div");
+    priorityText.textContent = "Priority:";
+    priorityText.style.fontWeight = "bold";
+    priorityText.style.fontSize = "18px";
+
+    const priorityValue = document.createElement("div");
+    priorityValue.textContent = todo.priority;
+
+    priorityWrapper.appendChild(priorityText);
+    priorityWrapper.appendChild(priorityValue);
+
+    //---
+
+    div.appendChild(titleWrapper);
+    div.appendChild(descriptionWrapper);
+    div.appendChild(dueDateWrapper);
+    div.appendChild(priorityWrapper);
+
     todoContainer.appendChild(div);
   });
 
@@ -107,25 +217,9 @@ function populateMainContent(title, todos) {
   const todoBtn = document.createElement("button");
   todoBtn.textContent = "Create ToDo";
   todoBtn.classList.add("create-todo");
-  todoBtn.addEventListener("click", () => {
-    dialog.appendChild(createToDoDialog());
-  });
+  todoBtn.addEventListener("click", () => createToDoDialog(project));
 
   createToDo.appendChild(todoBtn);
-}
-
-function displayToDo() {
-  const todo = createToDo(
-    "myFirstToDo ",
-    "| Description of my first ToDo |",
-    " DatePlaceholder",
-    1
-  );
-
-  const div = document.createElement("div");
-  div.textContent = `${todo.title} ${todo.description} ${todo.dueDate} ${todo.priority}`;
-
-  return div;
 }
 
 // Utility/Helper Functions
@@ -135,22 +229,47 @@ function initMainContent() {
   const main = document.querySelector("main");
 
   const mainTitle = document.querySelector("main .title");
-  mainTitle.textContent = "No Project";
+  mainTitle.textContent = "No Projects";
 
   const todoContainer = document.querySelector("main .container");
 
   const dialog = document.querySelector("main .dialog");
 }
 
+function initSideBarContent() {
+  const createProjectBtn = document.querySelector(
+    ".sidebar .project .create-project"
+  );
+  createProjectBtn.addEventListener("click", createProjectDialog);
+}
+
 function handleAddProjectClickEvent(inputValue, dialog) {
   const project = createProject(inputValue);
   createProjectEntry(project);
-  populateMainContent(project.title, project.todos);
+  populateMainContent(project);
 
   // Close dialog
   dialog.replaceChildren();
 }
 
-// Programm starts here
+function handleAddToDoClickEvent(
+  title,
+  description,
+  dueDate,
+  priority,
+  dialog,
+  project
+) {
+  const todo = createToDo(title, description, dueDate, priority);
+  project.todos.push(todo);
 
+  // Close dialog
+  dialog.replaceChildren();
+
+  // Rerender project to display new changes
+  populateMainContent(project);
+}
+
+// Programm starts here
+initSideBarContent();
 initMainContent();
